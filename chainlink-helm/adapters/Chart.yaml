@@ -1,0 +1,6 @@
+apiVersion: v2
+name: adapters
+description: A Helm chart for Chainlink adapters
+type: application
+version: 0.1.68
+appVersion: "1.16.0"

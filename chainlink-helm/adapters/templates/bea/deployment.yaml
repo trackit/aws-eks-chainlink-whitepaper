@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "adapters.bea.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "adapters.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.bea.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "adapters.bea.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.bea.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "adapters.bea.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.bea.name }}
+          image: "{{ .Values.bea.image.repository }}:{{ .Values.bea.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.bea.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.bea.service.port }}
+              protocol: TCP
+          env:
+            - name: EA_PORT
+              value: {{ .Values.bea.config.ea_port | quote }}
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "adapters.bea.fullname" . }}
+                  key: api-key
+            - name: TIMEOUT
+              value: {{ .Values.bea.config.timeout | quote }}
+            - name: CACHE_ENABLED
+              value: {{ .Values.bea.config.cache_enabled | quote }}
+            - name: RATE_LIMIT_ENABLED
+              value: {{ .Values.bea.config.rate_limit_enabled | quote }}
+            - name: WARMUP_ENABLED
+              value: {{ .Values.bea.config.warmup_enabled | quote }}
+            - name: RATE_LIMIT_API_PROVIDER
+              value: {{ .Values.bea.config.rate_limit_api_provider | quote }}
+            - name: RATE_LIMIT_API_TIER
+              value: {{ .Values.bea.config.rate_limit_api_tier | quote }}
+            - name: REQUEST_COALESCING_ENABLED
+              value: {{ .Values.bea.config.request_coalescing_enabled | quote }}
+            - name: REQUEST_COALESCING_INTERVAL
+              value: {{ .Values.bea.config.request_coalescing_interval | quote }}
+            - name: REQUEST_COALESCING_INTERVAL_MAX
+              value: {{ .Values.bea.config.request_coalescing_interval_max | quote }}
+            - name: REQUEST_COALESCING_INTERVAL_COEFFICIENT
+              value: {{ .Values.bea.config.request_coalescing_interval_coefficient | quote }}
+            - name: REQUEST_COALESCING_ENTROPY_MAX
+              value: {{ .Values.bea.config.request_coalescing_entropy_max | quote }}
+            - name: WARMUP_UNHEALTHY_THRESHOLD
+              value: {{ .Values.bea.config.warmup_unhealthy_treshold | quote }}
+            - name: WARMUP_SUBSCRIPTION_TTL
+              value: {{ .Values.bea.config.warmup_subscription_ttl | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.bea.config.log_level | quote }}
+            - name: DEBUG
+              value: {{ .Values.bea.config.debug | quote }}
+            - name: API_VERBOSE
+              value: {{ .Values.bea.config.api_verbose | quote }}
+            - name: EXPERIMENTAL_METRICS_ENABLED
+              value: {{ .Values.bea.config.experimental_metrics_enabled | quote }}
+            - name: METRICS_NAME
+              value: {{ .Values.bea.config.metrics_name | quote }}
+            - name: RETRY
+              value: {{ .Values.bea.config.retry | quote }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            {{- toYaml .Values.bea.resources | nindent 12 }}
+      {{- with .Values.bea.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.bea.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.bea.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

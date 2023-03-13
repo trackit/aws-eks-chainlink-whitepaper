@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "adapters.coingecko.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "adapters.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.coingecko.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "adapters.coingecko.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.coingecko.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "adapters.coingecko.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.coingecko.name }}
+          image: "{{ .Values.coingecko.image.repository }}:{{ .Values.coingecko.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.coingecko.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.coingecko.service.port }}
+              protocol: TCP
+          env:
+            - name: EA_PORT
+              value: {{ .Values.coingecko.config.ea_port | quote }}
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "adapters.coingecko.fullname" . }}
+                  key: api-key
+            - name: TIMEOUT
+              value: {{ .Values.coingecko.config.timeout | quote }}
+            - name: CACHE_ENABLED
+              value: {{ .Values.coingecko.config.cache_enabled | quote }}
+            - name: RATE_LIMIT_ENABLED
+              value: {{ .Values.coingecko.config.rate_limit_enabled | quote }}
+            - name: WARMUP_ENABLED
+              value: {{ .Values.coingecko.config.warmup_enabled | quote }}
+            - name: RATE_LIMIT_API_PROVIDER
+              value: {{ .Values.coingecko.config.rate_limit_api_provider | quote }}
+            - name: RATE_LIMIT_API_TIER
+              value: {{ .Values.coingecko.config.rate_limit_api_tier | quote }}
+            - name: REQUEST_COALESCING_ENABLED
+              value: {{ .Values.coingecko.config.request_coalescing_enabled | quote }}
+            - name: REQUEST_COALESCING_INTERVAL
+              value: {{ .Values.coingecko.config.request_coalescing_interval | quote }}
+            - name: REQUEST_COALESCING_INTERVAL_MAX
+              value: {{ .Values.coingecko.config.request_coalescing_interval_max | quote }}
+            - name: REQUEST_COALESCING_INTERVAL_COEFFICIENT
+              value: {{ .Values.coingecko.config.request_coalescing_interval_coefficient | quote }}
+            - name: REQUEST_COALESCING_ENTROPY_MAX
+              value: {{ .Values.coingecko.config.request_coalescing_entropy_max | quote }}
+            - name: WARMUP_UNHEALTHY_THRESHOLD
+              value: {{ .Values.coingecko.config.warmup_unhealthy_treshold | quote }}
+            - name: WARMUP_SUBSCRIPTION_TTL
+              value: {{ .Values.coingecko.config.warmup_subscription_ttl | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.coingecko.config.log_level | quote }}
+            - name: DEBUG
+              value: {{ .Values.coingecko.config.debug | quote }}
+            - name: API_VERBOSE
+              value: {{ .Values.coingecko.config.api_verbose | quote }}
+            - name: EXPERIMENTAL_METRICS_ENABLED
+              value: {{ .Values.coingecko.config.experimental_metrics_enabled | quote }}
+            - name: METRICS_NAME
+              value: {{ .Values.coingecko.config.metrics_name | quote }}
+            - name: RETRY
+              value: {{ .Values.coingecko.config.retry | quote }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            {{- toYaml .Values.coingecko.resources | nindent 12 }}
+      {{- with .Values.coingecko.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.coingecko.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.coingecko.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

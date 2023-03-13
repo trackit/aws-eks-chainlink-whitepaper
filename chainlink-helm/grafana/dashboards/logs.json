@@ -1,0 +1,365 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": {
+                    "type": "grafana",
+                    "uid": "-- Grafana --"
+                },
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "target": {
+                    "limit": 100,
+                    "matchAny": false,
+                    "tags": [],
+                    "type": "dashboard"
+                },
+                "type": "dashboard"
+            }
+        ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "links": [],
+    "liveNow": true,
+    "panels": [
+        {
+            "datasource": {
+                "type": "cloudwatch",
+                "uid": "cloudwatch"
+            },
+            "description": "",
+            "gridPos": {
+                "h": 13,
+                "w": 24,
+                "x": 0,
+                "y": 0
+            },
+            "id": 2,
+            "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Ascending",
+                "wrapLogMessage": false
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "cloudwatch",
+                        "uid": "cloudwatch"
+                    },
+                    "expression": "fields log\n| filter @logStream like \"chainlink-\"",
+                    "hide": false,
+                    "id": "",
+                    "logGroupNames": [
+                        "/aws/containerinsights/chainlink-dev/application"
+                    ],
+                    "namespace": "",
+                    "queryMode": "Logs",
+                    "refId": "logs",
+                    "region": "default",
+                    "statsGroups": []
+                }
+            ],
+            "title": "Chainlink",
+            "transformations": [],
+            "type": "logs"
+        },
+        {
+            "collapsed": false,
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 13
+            },
+            "id": 6,
+            "panels": [],
+            "title": "Adapters",
+            "type": "row"
+        },
+        {
+            "datasource": {
+                "type": "cloudwatch",
+                "uid": "cloudwatch"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 14
+            },
+            "id": 4,
+            "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Ascending",
+                "wrapLogMessage": false
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "cloudwatch",
+                        "uid": "cloudwatch"
+                    },
+                    "expression": "fields log\n| filter @logStream like \"coingecko-\"\n",
+                    "id": "",
+                    "logGroupNames": [
+                        "/aws/containerinsights/chainlink-dev/application"
+                    ],
+                    "namespace": "",
+                    "queryMode": "Logs",
+                    "refId": "A",
+                    "region": "default",
+                    "statsGroups": []
+                }
+            ],
+            "title": "Coingecko",
+            "type": "logs"
+        },
+        {
+            "datasource": {
+                "type": "cloudwatch",
+                "uid": "cloudwatch"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 14
+            },
+            "id": 8,
+            "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Ascending",
+                "wrapLogMessage": false
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "cloudwatch",
+                        "uid": "cloudwatch"
+                    },
+                    "expression": "fields log\n| filter @logStream like \"coinmarketcap-\"",
+                    "id": "",
+                    "logGroupNames": [
+                        "/aws/containerinsights/chainlink-dev/application"
+                    ],
+                    "namespace": "",
+                    "queryMode": "Logs",
+                    "refId": "A",
+                    "region": "default",
+                    "statsGroups": []
+                }
+            ],
+            "title": "Coinmarketcap",
+            "type": "logs"
+        },
+        {
+            "datasource": {
+                "type": "cloudwatch",
+                "uid": "cloudwatch"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 22
+            },
+            "id": 10,
+            "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Ascending",
+                "wrapLogMessage": false
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "cloudwatch",
+                        "uid": "cloudwatch"
+                    },
+                    "expression": "fields log\n| filter @logStream like \"cryptocompare-\"",
+                    "id": "",
+                    "logGroupNames": [
+                        "/aws/containerinsights/chainlink-dev/application"
+                    ],
+                    "namespace": "",
+                    "queryMode": "Logs",
+                    "refId": "A",
+                    "region": "default",
+                    "statsGroups": []
+                }
+            ],
+            "title": "Cryptocompare",
+            "type": "logs"
+        },
+        {
+            "datasource": {
+                "type": "cloudwatch",
+                "uid": "cloudwatch"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 22
+            },
+            "id": 12,
+            "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Ascending",
+                "wrapLogMessage": false
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "cloudwatch",
+                        "uid": "cloudwatch"
+                    },
+                    "expression": "fields log\n| filter @logStream like \"jpegd-\"",
+                    "id": "",
+                    "logGroupNames": [
+                        "/aws/containerinsights/chainlink-dev/application"
+                    ],
+                    "namespace": "",
+                    "queryMode": "Logs",
+                    "refId": "A",
+                    "region": "default",
+                    "statsGroups": []
+                }
+            ],
+            "title": "jpegd",
+            "type": "logs"
+        },
+        {
+            "datasource": {
+                "type": "cloudwatch",
+                "uid": "cloudwatch"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 30
+            },
+            "id": 14,
+            "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Ascending",
+                "wrapLogMessage": false
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "cloudwatch",
+                        "uid": "cloudwatch"
+                    },
+                    "expression": "fields log\n| filter @logStream like \"nomics-\"",
+                    "id": "",
+                    "logGroupNames": [
+                        "/aws/containerinsights/chainlink-dev/application"
+                    ],
+                    "namespace": "",
+                    "queryMode": "Logs",
+                    "refId": "A",
+                    "region": "default",
+                    "statsGroups": []
+                }
+            ],
+            "title": "Nomics",
+            "type": "logs"
+        },
+        {
+            "datasource": {
+                "type": "cloudwatch",
+                "uid": "cloudwatch"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 30
+            },
+            "id": 16,
+            "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Ascending",
+                "wrapLogMessage": false
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "cloudwatch",
+                        "uid": "cloudwatch"
+                    },
+                    "expression": "fields log\n| filter @logStream like \"tiingo-\"",
+                    "id": "",
+                    "logGroupNames": [
+                        "/aws/containerinsights/chainlink-dev/application"
+                    ],
+                    "namespace": "",
+                    "queryMode": "Logs",
+                    "refId": "A",
+                    "region": "default",
+                    "statsGroups": []
+                }
+            ],
+            "title": "Tiingo",
+            "type": "logs"
+        }
+    ],
+    "refresh": "5s",
+    "schemaVersion": 36,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+        "list": []
+    },
+    "time": {
+        "from": "now-15m",
+        "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Logs",
+    "uid": "QN0MaPDVz",
+    "version": 1,
+    "weekStart": ""
+}

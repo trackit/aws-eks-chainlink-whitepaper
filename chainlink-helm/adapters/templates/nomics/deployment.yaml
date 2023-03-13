@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "adapters.nomics.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "adapters.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.nomics.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "adapters.nomics.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.nomics.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "adapters.nomics.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.nomics.name }}
+          image: "{{ .Values.nomics.image.repository }}:{{ .Values.nomics.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.nomics.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.nomics.service.port }}
+              protocol: TCP
+          env:
+            - name: EA_PORT
+              value: {{ .Values.nomics.config.ea_port | quote }}
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "adapters.nomics.fullname" . }}
+                  key: api-key
+            - name: TIMEOUT
+              value: {{ .Values.nomics.config.timeout | quote }}
+            - name: CACHE_ENABLED
+              value: {{ .Values.nomics.config.cache_enabled | quote }}
+            - name: RATE_LIMIT_ENABLED
+              value: {{ .Values.nomics.config.rate_limit_enabled | quote }}
+            - name: WARMUP_ENABLED
+              value: {{ .Values.nomics.config.warmup_enabled | quote }}
+            - name: RATE_LIMIT_API_PROVIDER
+              value: {{ .Values.nomics.config.rate_limit_api_provider | quote }}
+            - name: RATE_LIMIT_API_TIER
+              value: {{ .Values.nomics.config.rate_limit_api_tier | quote }}
+            - name: REQUEST_COALESCING_ENABLED
+              value: {{ .Values.nomics.config.request_coalescing_enabled | quote }}
+            - name: REQUEST_COALESCING_INTERVAL
+              value: {{ .Values.nomics.config.request_coalescing_interval | quote }}
+            - name: REQUEST_COALESCING_INTERVAL_MAX
+              value: {{ .Values.nomics.config.request_coalescing_interval_max | quote }}
+            - name: REQUEST_COALESCING_INTERVAL_COEFFICIENT
+              value: {{ .Values.nomics.config.request_coalescing_interval_coefficient | quote }}
+            - name: REQUEST_COALESCING_ENTROPY_MAX
+              value: {{ .Values.nomics.config.request_coalescing_entropy_max | quote }}
+            - name: WARMUP_UNHEALTHY_THRESHOLD
+              value: {{ .Values.nomics.config.warmup_unhealthy_treshold | quote }}
+            - name: WARMUP_SUBSCRIPTION_TTL
+              value: {{ .Values.nomics.config.warmup_subscription_ttl | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.nomics.config.log_level | quote }}
+            - name: DEBUG
+              value: {{ .Values.nomics.config.debug | quote }}
+            - name: API_VERBOSE
+              value: {{ .Values.nomics.config.api_verbose | quote }}
+            - name: EXPERIMENTAL_METRICS_ENABLED
+              value: {{ .Values.nomics.config.experimental_metrics_enabled | quote }}
+            - name: METRICS_NAME
+              value: {{ .Values.nomics.config.metrics_name | quote }}
+            - name: RETRY
+              value: {{ .Values.nomics.config.retry | quote }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            {{- toYaml .Values.nomics.resources | nindent 12 }}
+      {{- with .Values.nomics.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nomics.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nomics.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "adapters.jpegd.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "adapters.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.jpegd.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "adapters.jpegd.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.jpegd.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "adapters.jpegd.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.jpegd.name }}
+          image: "{{ .Values.jpegd.image.repository }}:{{ .Values.jpegd.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.jpegd.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.jpegd.service.port }}
+              protocol: TCP
+          env:
+            - name: EA_PORT
+              value: {{ .Values.jpegd.config.ea_port | quote }}
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "adapters.jpegd.fullname" . }}
+                  key: api-key
+            - name: TIMEOUT
+              value: {{ .Values.jpegd.config.timeout | quote }}
+            - name: CACHE_ENABLED
+              value: {{ .Values.jpegd.config.cache_enabled | quote }}
+            - name: RATE_LIMIT_ENABLED
+              value: {{ .Values.jpegd.config.rate_limit_enabled | quote }}
+            - name: WARMUP_ENABLED
+              value: {{ .Values.jpegd.config.warmup_enabled | quote }}
+            - name: RATE_LIMIT_API_PROVIDER
+              value: {{ .Values.jpegd.config.rate_limit_api_provider | quote }}
+            - name: RATE_LIMIT_API_TIER
+              value: {{ .Values.jpegd.config.rate_limit_api_tier | quote }}
+            - name: REQUEST_COALESCING_ENABLED
+              value: {{ .Values.jpegd.config.request_coalescing_enabled | quote }}
+            - name: REQUEST_COALESCING_INTERVAL
+              value: {{ .Values.jpegd.config.request_coalescing_interval | quote }}
+            - name: REQUEST_COALESCING_INTERVAL_MAX
+              value: {{ .Values.jpegd.config.request_coalescing_interval_max | quote }}
+            - name: REQUEST_COALESCING_INTERVAL_COEFFICIENT
+              value: {{ .Values.jpegd.config.request_coalescing_interval_coefficient | quote }}
+            - name: REQUEST_COALESCING_ENTROPY_MAX
+              value: {{ .Values.jpegd.config.request_coalescing_entropy_max | quote }}
+            - name: WARMUP_UNHEALTHY_THRESHOLD
+              value: {{ .Values.jpegd.config.warmup_unhealthy_treshold | quote }}
+            - name: WARMUP_SUBSCRIPTION_TTL
+              value: {{ .Values.jpegd.config.warmup_subscription_ttl | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.jpegd.config.log_level | quote }}
+            - name: DEBUG
+              value: {{ .Values.jpegd.config.debug | quote }}
+            - name: API_VERBOSE
+              value: {{ .Values.jpegd.config.api_verbose | quote }}
+            - name: EXPERIMENTAL_METRICS_ENABLED
+              value: {{ .Values.jpegd.config.experimental_metrics_enabled | quote }}
+            - name: METRICS_NAME
+              value: {{ .Values.jpegd.config.metrics_name | quote }}
+            - name: RETRY
+              value: {{ .Values.jpegd.config.retry | quote }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            {{- toYaml .Values.jpegd.resources | nindent 12 }}
+      {{- with .Values.jpegd.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.jpegd.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.jpegd.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
