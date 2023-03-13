@@ -111,21 +111,21 @@ module "eks" {
   # aws-auth configmap
   manage_aws_auth_configmap = true
 
-#  aws_auth_roles = [
-#    {
-#      rolearn  = var.role_arn
-#      username = var.username
-#      groups   = ["system:masters"]
-#    },
-#  ]
-#
-#  aws_auth_users = [
-#    {
-#      userarn  = var.user_arn
-#      username = var.username
-#      groups   = ["system:masters"]
-#    },
-#  ]
+  aws_auth_roles = [
+    {
+      rolearn  = var.role_arn
+      username = var.username
+      groups   = ["system:masters"]
+    },
+  ]
+
+  aws_auth_users = [
+    {
+      userarn  = var.user_arn
+      username = var.username
+      groups   = ["system:masters"]
+    },
+  ]
 
   aws_auth_accounts = [
     data.aws_caller_identity.current.id,
