@@ -10,6 +10,7 @@ image:
   pullPolicy: Always
 
 config:
+    is_explorer_enabled: false
     explorer_access_key: ""
     explorer_secret: ""
     explorer_url: ""

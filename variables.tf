@@ -65,7 +65,7 @@ variable "chainlink_domain_name" {
 
 variable "p2p_bootstrap_peers" {
   type = string
-  default = "fake-p2p"
+  default = ""
 }
 
 variable "chainlink_acm_certificate_arn" {
@@ -77,4 +77,3 @@ variable "user_email" {
   type = string
   default = "user@example.com"
 }
-
