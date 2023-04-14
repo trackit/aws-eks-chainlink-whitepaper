@@ -111,8 +111,8 @@ module "eks" {
   # aws-auth configmap
   manage_aws_auth_configmap = true
 
-  aws_auth_roles = aws_auth_roles
-  aws_auth_users = aws_auth_users
+  aws_auth_roles = var.aws_auth_roles
+  aws_auth_users = var.aws_auth_users
 
   aws_auth_accounts = [
     data.aws_caller_identity.current.id,
