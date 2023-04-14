@@ -1,9 +1,10 @@
 terraform {
+    required_version = "~> 1.3.9"
   backend "s3" {
-    bucket         = "chainlink-article-terraform"
+    bucket         = "S3_BUCKET_NAME"
     key            = "terraform.state"
-    region         = "us-east-1"
-    dynamodb_table = "chainlink-article-terraform-lock"
+    region         = "AWS_REGION"
+    dynamodb_table = "DYNAMODB_TABLE_NAME"
   }
 
   required_providers {
@@ -15,7 +16,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "AWS_REGION"
 }
 
 provider "sops" {}
