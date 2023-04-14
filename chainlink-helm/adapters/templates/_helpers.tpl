@@ -123,3 +123,30 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/name: {{ include "adapters.bea.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{- define "adapters.coinbase.fullname" -}}
+{{ .Values.coinbase.name | quote }}
+{{- end }}
+
+{{- define "adapters.coinbase.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "adapters.coinbase.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "adapters.fluent_finance.fullname" -}}
+{{ .Values.fluent_finance.name | quote }}
+{{- end }}
+
+{{- define "adapters.fluent_finance.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "adapters.fluent_finance.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "adapters.anyblock.fullname" -}}
+{{ .Values.anyblock.name | quote }}
+{{- end }}
+
+{{- define "adapters.anyblock.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "adapters.anyblock.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

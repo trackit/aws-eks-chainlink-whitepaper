@@ -1,6 +1,7 @@
 nomics:
   name: "nomics"
   replicaCount: 1
+  enabled: false
 
   image:
     repository: public.ecr.aws/chainlink/adapters/nomics-adapter
@@ -54,6 +55,7 @@ nomics:
 cryptocompare:
   name: "cryptocompare"
   replicaCount: 1
+  enabled: false
 
   image:
     repository: public.ecr.aws/chainlink/adapters/cryptocompare-adapter
@@ -109,6 +111,7 @@ cryptocompare:
 tiingo:
   name: "tiingo"
   replicaCount: 1
+  enabled: false
 
   image:
     repository: public.ecr.aws/chainlink/adapters/tiingo-adapter
@@ -160,6 +163,7 @@ tiingo:
 coingecko:
   name: "coingecko"
   replicaCount: 1
+  enabled: false
 
   image:
     repository: public.ecr.aws/chainlink/adapters/coingecko-adapter
@@ -211,6 +215,7 @@ coingecko:
 coinmarketcap:
   name: "coinmarketcap"
   replicaCount: 1
+  enabled: false
 
   image:
     repository: public.ecr.aws/chainlink/adapters/coinmarketcap-adapter
@@ -262,6 +267,7 @@ coinmarketcap:
 jpegd:
   name: "jpegd"
   replicaCount: 1
+  enabled: false
 
   image:
     repository: public.ecr.aws/chainlink/adapters/jpegd-adapter
@@ -316,6 +322,7 @@ jpegd:
 bea:
   name: "bea"
   replicaCount: 1
+  enabled: false
 
   image:
     repository: public.ecr.aws/chainlink/adapters/bea-adapter

@@ -17,7 +17,7 @@ resource "aws_eip" "p2p_ingress_b" {
 resource "helm_release" "chainlink" {
   chart   = "${path.module}/../chainlink-helm/chainlink"
   name    = "chainlink"
-  version = "0.1.36"
+  version = "1.0.0"
 
   recreate_pods = true
   force_update  = true
@@ -102,7 +102,7 @@ resource "kubernetes_secret" "api_secrets" {
 resource "helm_release" "adapters" {
   chart   = "${path.module}/../chainlink-helm/adapters"
   name    = "adapters"
-  version = "0.1.71"
+  version = "1.0.0"
 
   # We are using SOPS to retrieve Adapter API Keys and put it as a value for the Chart
   set {
