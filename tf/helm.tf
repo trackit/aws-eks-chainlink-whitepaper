@@ -121,8 +121,8 @@ resource "helm_release" "adapters" {
   }
 
   set {
-    name  = "nomics.config.api_key"
-    value = sensitive(data.sops_file.secrets.data["nomics_api_key"])
+    name  = "tiingo.config.api_key"
+    value = sensitive(data.sops_file.secrets.data["tiingo_api_key"])
   }
 
   set {
