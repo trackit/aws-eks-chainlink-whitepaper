@@ -1,0 +1,134 @@
+---
+# Source: adapters/templates/tiingo/secret.yml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "tiingo"
+  namespace: default
+  labels:
+    helm.sh/chart: adapters-0.1.71
+    app.kubernetes.io/name: adapters
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+type: Opaque
+data:
+  api-key: ZmFrZQ==
+---
+# Source: adapters/templates/tiingo/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: "tiingo"
+  labels:
+    helm.sh/chart: adapters-0.1.71
+    app.kubernetes.io/name: adapters
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  ports:
+    - port: 1134
+      targetPort: http
+      protocol: TCP
+      name: http
+    - port: 9080
+      targetPort: 9080
+      protocol: TCP
+      name: prometheus
+  selector:
+    app.kubernetes.io/name: "tiingo"
+    app.kubernetes.io/instance: test
+---
+# Source: adapters/templates/tiingo/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "tiingo"
+  namespace: default
+  labels:
+    helm.sh/chart: adapters-0.1.71
+    app.kubernetes.io/name: adapters
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "tiingo"
+      app.kubernetes.io/instance: test
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9080"
+        prometheus.io/scrape: "true"
+      labels:
+        app.kubernetes.io/name: "tiingo"
+        app.kubernetes.io/instance: test
+    spec:
+      containers:
+        - name: tiingo
+          image: "public.ecr.aws/chainlink/adapters/tiingo-adapter:latest"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 1134
+              protocol: TCP
+          env:
+            - name: EA_PORT
+              value: "1134"
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "tiingo"
+                  key: api-key
+            - name: TIMEOUT
+              value: "30000"
+            - name: CACHE_ENABLED
+              value: "false"
+            - name: RATE_LIMIT_ENABLED
+              value: "true"
+            - name: WARMUP_ENABLED
+              value: "true"
+            - name: RATE_LIMIT_API_PROVIDER
+              value: "tiingo"
+            - name: RATE_LIMIT_API_TIER
+              value: "https://api.tiingo.com/api/test"
+            - name: REQUEST_COALESCING_ENABLED
+              value: "true"
+            - name: REQUEST_COALESCING_INTERVAL
+              value: "100"
+            - name: REQUEST_COALESCING_INTERVAL_MAX
+              value: "1000"
+            - name: REQUEST_COALESCING_INTERVAL_COEFFICIENT
+              value: "2"
+            - name: REQUEST_COALESCING_ENTROPY_MAX
+              value: "0"
+            - name: WARMUP_UNHEALTHY_THRESHOLD
+              value: "3"
+            - name: WARMUP_SUBSCRIPTION_TTL
+              value: "3.6e+06"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: DEBUG
+              value: "false"
+            - name: API_VERBOSE
+              value: "false"
+            - name: EXPERIMENTAL_METRICS_ENABLED
+              value: "true"
+            - name: METRICS_NAME
+              value: "tiingo"
+            - name: RETRY
+              value: "1"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            {}

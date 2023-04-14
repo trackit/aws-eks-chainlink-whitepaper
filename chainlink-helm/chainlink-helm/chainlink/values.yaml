@@ -1,0 +1,64 @@
+replicaCount: 1
+
+environment: ""
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  repository: smartcontract/chainlink
+  tag: 1.13.0-root
+  pullPolicy: Always
+
+config:
+    is_explorer_enabled: false
+    explorer_access_key: ""
+    explorer_secret: ""
+    explorer_url: ""
+    db_url: ""
+    root: "/chainlink"
+    log_level: "debug"
+    eth_chain_id: "4"
+    chainlink_tls_port: "0"
+    secure_cookies: "false"
+    allow_origins: "*"
+    eth_url: ""
+    database_locking_mode: "lease"
+    p2p_bootstrap_peers: ""
+    feature_offchain_reporting: "true"
+    chainlink_dev: "true"
+    p2p:
+        enabled: true
+        port: 10000
+        elastic_ip_alloc_id: ''
+        public_ip: ''
+
+serviceAccount:
+  create: true
+  annotations: { }
+  name: ""
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: "/metrics"
+  prometheus.io/port: "6688"
+
+ingress:
+  host: 'example.org'
+  acm_certificate_arn: ''
+
+resources:
+  limits:
+    cpu: 1024m
+    memory: 2048Mi
+  requests:
+    cpu: 512m
+    memory: 1024Mi
+
+service:
+  port: 6688
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

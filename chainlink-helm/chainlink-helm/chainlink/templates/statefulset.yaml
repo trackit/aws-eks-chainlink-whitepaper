@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "chainlink.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "chainlink.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "chainlink.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "chainlink.fullname" . }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "chainlink.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 6688
+              protocol: TCP
+            {{ if .Values.config.p2p.enabled }}
+            - name: p2p
+              containerPort: {{ .Values.config.p2p.port }}
+              protocol: TCP
+            {{ end }}
+          command: ["chainlink", "local", "n", "-p", "/etc/config/.password", "-a", "/etc/config/.api"]
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "chainlink.fullname" . }}
+                  key: db-url
+            {{ if .Values.config.is_explorer_enabled }}
+            - name: EXPLORER_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "chainlink.fullname" . }}
+                  key: explorer-access-key
+            - name: EXPLORER_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "chainlink.fullname" . }}
+                  key: explorer-secret
+            - name: EXPLORER_URL
+              value: {{ .Values.config.explorer_url | quote }}
+            {{ end }}
+            - name: ROOT
+              value: {{ .Values.config.root | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.config.log_level | quote }}
+            - name: ETH_CHAIN_ID
+              value: {{ .Values.config.eth_chain_id | quote }}
+            - name: CHAINLINK_TLS_PORT
+              value: {{ .Values.config.chainlink_tls_port | quote }}
+            - name: SECURE_COOKIES
+              value: {{ .Values.config.secure_cookies | quote }}
+            - name: ALLOW_ORIGINS
+              value: {{ .Values.config.allow_origins | quote }}
+            - name: ETH_URL
+              value: {{ .Values.config.eth_url | quote }}
+            - name: DATABASE_LOCKING_MODE
+              value: {{ .Values.config.database_locking_mode | quote }}
+            - name: P2P_BOOTSTRAP_PEERS
+              value: {{ .Values.config.p2p_bootstrap_peers | quote }}
+            - name: FEATURE_OFFCHAIN_REPORTING
+              value: {{ .Values.config.feature_offchain_reporting | quote }}
+            - name: CHAINLINK_DEV
+              value: {{ .Values.config.chainlink_dev | quote }}
+            {{ if .Values.config.p2p.enabled }}
+            - name: P2P_LISTEN_PORT
+              value: {{ .Values.config.p2p.port | quote }}
+            - name: P2P_ANNOUNCE_PORT
+              value: {{ .Values.config.p2p.port | quote }}
+            - name: P2P_ANNOUNCE_IP
+              value: {{ .Values.config.p2p.public_ip | quote }}
+            {{ end }}
+            - name: CHAINLINK_PORT
+              value: "6688"
+            - name: SKIP_DATABASE_PASSWORD_COMPLEXITY_CHECK
+              value: "true"
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - test $(chainlink node db status 2>&1 | grep ERROR | wc -c) -eq 0
+            initialDelaySeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: secrets-volume
+              mountPath: /etc/config
+      volumes:
+        - name: secrets-volume
+          secret:
+            secretName: api-secrets
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

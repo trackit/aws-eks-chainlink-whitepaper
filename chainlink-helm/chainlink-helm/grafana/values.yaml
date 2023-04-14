@@ -1,0 +1,63 @@
+grafana.ini:
+  smtp:
+    enabled: true
+    host: "smtp-relay.gmail.com:587"
+    from_address: "no-reply@example.com"
+
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://prometheus-server:80
+        version: 1
+        editable: false
+      - name: CloudWatch
+        type: cloudwatch
+        access: proxy
+        uid: cloudwatch
+        editable: false
+        jsonData:
+          authType: default
+
+ingress:
+  enabled: true
+  path: /
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: "/api/health"
+    alb.ingress.kubernetes.io/group.name: chainlink-lb
+    alb.ingress.kubernetes.io/certificate-arn: ${acm-certificate-arn}
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+  ingressClassName: alb
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+    - name: 'default'
+      orgId: 1
+      folder: ''
+      type: file
+      disableDeletion: false
+      editable: true
+      options:
+        path: /var/lib/grafana/dashboards
+
+dashboards:
+  default:
+    chainlink:
+      json: |
+        ${chainlink-ocr}
+    external-adapter:
+      json: |
+        ${external-adapter}
+
+#  fields @timestamp, @message
+#  | filter @logStream like "chainlink-"
+#  | limit 100

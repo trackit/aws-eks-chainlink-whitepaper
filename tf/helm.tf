@@ -15,11 +15,17 @@ resource "aws_eip" "p2p_ingress_b" {
 }
 
 resource "helm_release" "chainlink" {
-  chart   = "${path.module}/chainlink-helm/chainlink"
+  chart   = "${path.module}/../chainlink-helm/chainlink"
   name    = "chainlink"
+  version = "0.1.36"
 
   recreate_pods = true
   force_update  = true
+
+  set {
+    name  = "config.eth_chain_id"
+    value = var.chainlink_eth_chain_id
+  }
 
   set {
     name = "config.eth_url"
@@ -28,7 +34,7 @@ resource "helm_release" "chainlink" {
 
   set {
     name  = "config.chainlink_dev"
-    value = var.env == "dev" ? "true" : "false"
+    value = var.chainlink_dev
   }
 
   set {
@@ -78,13 +84,13 @@ resource "kubernetes_secret" "api_secrets" {
 
   data = {
     ".password" = templatefile(
-      "${path.module}/chainlink-helm/secrets/password.tpl",
+      "${path.module}/../chainlink-helm/secrets/password.tpl",
       {
         wallet-password : sensitive(data.sops_file.secrets.data["wallet_password"]),
       }
     )
     ".api" = templatefile(
-      "${path.module}/chainlink-helm/secrets/api.tpl",
+      "${path.module}/../chainlink-helm/secrets/api.tpl",
       {
         email : var.user_email
         password : sensitive(data.sops_file.secrets.data["user_password"])
@@ -94,18 +100,29 @@ resource "kubernetes_secret" "api_secrets" {
 }
 
 resource "helm_release" "adapters" {
-  chart   = "${path.module}/chainlink-helm/adapters"
+  chart   = "${path.module}/../chainlink-helm/adapters"
   name    = "adapters"
+  version = "0.1.71"
 
   # We are using SOPS to retrieve Adapter API Keys and put it as a value for the Chart
   set {
-    name  = "nomics.config.api_key"
-    value = sensitive(data.sops_file.secrets.data["nomics_api_key"])
+    name = "nomics.enabled"
+    value = false
   }
 
   set {
-    name  = "tiingo.config.api_key"
-    value = sensitive(data.sops_file.secrets.data["tiingo_api_key"])
+    name = "tiingo.enabled"
+    value = true
+  }
+
+  set {
+    name = "cryptocompare.enabled"
+    value = true
+  }
+
+  set {
+    name  = "nomics.config.api_key"
+    value = sensitive(data.sops_file.secrets.data["nomics_api_key"])
   }
 
   set {
@@ -135,7 +152,7 @@ resource "helm_release" "prometheus" {
   }
 
   values = [
-    file("${path.module}/chainlink-helm/prometheus/values.yaml")
+    file("${path.module}/../chainlink-helm/prometheus/values.yaml")
   ]
 }
 
@@ -153,10 +170,10 @@ resource "helm_release" "grafana" {
 
   values = [
     templatefile(
-      "${path.module}/chainlink-helm/grafana/values.yaml",
+      "${path.module}/../chainlink-helm/grafana/values.yaml",
       {
-        chainlink-ocr : indent(8, file("${path.module}/chainlink-helm/grafana/dashboards/chainlink-ocr.json")),
-        external-adapter : indent(8, file("${path.module}/chainlink-helm/grafana/dashboards/external-adapter.json"))
+        chainlink-ocr : indent(8, file("${path.module}/../chainlink-helm/grafana/dashboards/chainlink-ocr.json")),
+        external-adapter : indent(8, file("${path.module}/../chainlink-helm/grafana/dashboards/external-adapter.json"))
         acm-certificate-arn : "fake-arn"
       }
     )

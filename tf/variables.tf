@@ -4,12 +4,54 @@ variable "kms_key_id" {
 
 variable "env" {
   type = string
-  default = "article"
+  default = "example"
 }
 
 variable "name" {
   type = string
   default = "chainlink"
+}
+
+variable "chainlink_eth_chain_id" {
+  type = string
+  default = "4"
+}
+
+variable "chainlink_dev" {
+  type = string
+  default = "true"
+}
+
+variable "aws_auth_roles" {
+  type = list(object({
+    rolearn  = string # AWS Role
+    username = string # Username in Kubernetes
+    groups   = list(string) # Group in Kubernetes
+  }))
+
+  default = [
+    {
+      rolearn  = "fake_role_arn"
+      username = "fake_username"
+      groups   = ["system:masters"]
+    }
+  ]
+}
+
+variable "aws_auth_users" {
+  type = list(object({
+    userarn  = string # AWS User
+    username = string # Username in Kubernetes
+    groups   = list(string) # Group in Kubernetes
+  }))
+
+  default = [
+    {
+      userarn  = "fake_user_arn"
+      username = "fake_username"
+      groups   = ["system:masters"]
+    }
+  ]
 }
 
 variable "vpc_cidr" {
@@ -40,18 +82,6 @@ variable "vpc_database_cidrs" {
 variable "rds_instance_type" {
   type = string
   default = "db.r6g.large"
-}
-
-variable "role_arn" {
-  type = string
-}
-
-variable "username" {
-  type = string
-}
-
-variable "user_arn" {
-  type = string
 }
 
 variable "eth_url" {
