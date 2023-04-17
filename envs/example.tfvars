@@ -30,7 +30,7 @@ vpc_database_cidrs = ["10.10.200.0/24", "10.10.201.0/24"]
 rds_instance_type = "db.r6g.large"
 
 ### CHAINLINK ###
-eth_url = "https://mainnet.example.io/v3/example"
+eth_url = "wss://mainnet.example.io/ws/v3/example"
 chainlink_domain_name = "chainlink.example.com"
 p2p_bootstrap_peers = ""
 user_email = "user@example.com"
