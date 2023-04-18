@@ -40,23 +40,23 @@ resource "helm_release" "chainlink" {
 
 The values are mostly the Chainlink environment variables described in their [documentation](https://docs.chain.link/docs/configuration-variables/).
 
-| Name                                | Chainlink Environment Variable | Type    | Default Value | Required                                                   |
-|-------------------------------------|--------------------------------|---------|---------------|------------------------------------------------------------|
-| `config.is_explorer_enabled`        | /                              | boolean | false         | <input type="checkbox" checked="checked" disabled="true"/> |
-| `config.explorer_access_key`        | EXPLORER_ACCESS_KEY            | string  | ""            | <input type="checkbox" disabled="true"/>                   |
-| `config.explorer_secret`            | EXPLORER_URL                   | string  | ""            | <input type="checkbox" disabled="true"/>                   |
-| `config.root`                       | ROOT                           | string  | "/chainlink"  | <input type="checkbox" disabled="true"/>                   |
-| `config.log_level`                  | LOG_LEVEL                      | string  | "debug"       | <input type="checkbox" disabled="true"/>                   |
-| `config.eth_chain_id`               | ETH_CHAIN_ID                   | string  | "4"           | <input type="checkbox" checked="checked" disabled="true"/> |
-| `config.chainlink_tls_port`         | CHAINLINK_TLS_PORT             | string  | "0"           | <input type="checkbox" disabled="true"/>                   |
-| `config.secure_cookies`             | SECURE_COOKIES                 | string  | "false"       | <input type="checkbox" disabled="true"/>                   |
-| `config.allow_origins`              | ALLOW_ORIGINS                  | string  | "*"           | <input type="checkbox" disabled="true"/>                   |
-| `config.eth_url`                    | ETH_URL                        | string  | ""            | <input type="checkbox" checked="checked" disabled="true"/> |
-| `config.database_locking_mode`      | DATABASE_LOCKING_MODE          | string  | "lease"       | <input type="checkbox" disabled="true"/>                   |
-| `config.p2p_bootstrap_peers`        | P2P_BOOTSTRAP_PEERS            | string  | ""            | <input type="checkbox" disabled="true"/>                   |
-| `config.feature_offchain_reporting` | FEATURE_OFFCHAIN_REPORTING     | string  | "true"        | <input type="checkbox" disabled="true"/>                   |
-| `config.chainlink_dev`              | CHAINLINK_DEV                  | string  | "true"        | <input type="checkbox" checked="checked" disabled="true"/> |
-| `config.p2p`                        | see below                      | object  | see below     | <input type="checkbox" checked="checked" disabled="true"/> |
+| Name                                | Chainlink Environment Variable | Type    | Default Value | Required |
+|-------------------------------------|--------------------------------|---------|---------------|----------|
+| `config.is_explorer_enabled`        | /                              | boolean | false         | true     |
+| `config.explorer_access_key`        | EXPLORER_ACCESS_KEY            | string  | ""            | false    |
+| `config.explorer_secret`            | EXPLORER_URL                   | string  | ""            | false    |
+| `config.root`                       | ROOT                           | string  | "/chainlink"  | false    |
+| `config.log_level`                  | LOG_LEVEL                      | string  | "debug"       | false    |
+| `config.eth_chain_id`               | ETH_CHAIN_ID                   | string  | "4"           | true     |
+| `config.chainlink_tls_port`         | CHAINLINK_TLS_PORT             | string  | "0"           | false    |
+| `config.secure_cookies`             | SECURE_COOKIES                 | string  | "false"       | false    |
+| `config.allow_origins`              | ALLOW_ORIGINS                  | string  | "*"           | false    |
+| `config.eth_url`                    | ETH_URL                        | string  | ""            | true     |
+| `config.database_locking_mode`      | DATABASE_LOCKING_MODE          | string  | "lease"       | false    |
+| `config.p2p_bootstrap_peers`        | P2P_BOOTSTRAP_PEERS            | string  | ""            | false    |
+| `config.feature_offchain_reporting` | FEATURE_OFFCHAIN_REPORTING     | string  | "true"        | false    |
+| `config.chainlink_dev`              | CHAINLINK_DEV                  | string  | "true"        | true     |
+| `config.p2p`                        | see below                      | object  | see below     | true     |
 
 If you don't have an explorer access key, you must set `is_explorer_enabled` to `false`. Otherwise, if you set it to `true`, you need to set `explorer_access_key` and `explorer_secret`.
 

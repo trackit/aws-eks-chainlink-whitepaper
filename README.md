@@ -40,8 +40,8 @@ provider "aws" {
 provider "sops" {}
 ```
 2. [Create a KMS key](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) in AWS to encrypt your secrets.
-3. Create a new tfvars file for your environment, i.e.: `envs/dev.tfvars` for the `dev` environment.
-   1. Fill in the values for the variables (`example.tfvars` contains an example of how it could look like).
+3. Create a new `tfvars` file for your environment, i.e.: `envs/dev.tfvars` for the `dev` environment.
+   1. Fill in the values for the variables ([`example.tfvars`](./envs/example.tfvars) contains an example of how it could look like).
    2. Create the env folder for your secrets: `mkdir tf/secrets/dev`.
 
 #### Secrets: SOPS
