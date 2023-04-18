@@ -1,7 +1,7 @@
 # AWS EKS Chainlink whitepaper
 
 AWS EKS Chainlink whitepaper is a Terraform project that deploys a [Chainlink](https://chain.link/) node and adapters on AWS EKS.
-The steps taken by TrackIt to build a secure, reliable, and scalable Chainlink environment are outlined in this article. Multiple Terraform modules supported by the AWS community were employed to deploy the AWS infrastructure.
+The steps taken by TrackIt to build a secure, reliable, and scalable Chainlink environment are outlined in this article (FIXME). Multiple Terraform modules supported by the AWS community were employed to deploy the AWS infrastructure.
 Note that these steps are not intended for a production environment, but they will help you set up your first Chainlink node.
 
 ## Quick Start
