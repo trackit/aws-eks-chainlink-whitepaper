@@ -1,5 +1,7 @@
 # AWS EKS Chainlink whitepaper
 
+![Chainlink on AWS](./docs/chainlink_diagram.png)
+
 AWS EKS Chainlink whitepaper is a Terraform project that deploys a [Chainlink](https://chain.link/) node and adapters on AWS EKS.
 The steps taken by TrackIt to build a secure, reliable, and scalable Chainlink environment are outlined in this article (FIXME). Multiple Terraform modules supported by the AWS community were employed to deploy the AWS infrastructure.
 Note that these steps are not intended for a production environment, but they will help you set up your first Chainlink node.
@@ -75,7 +77,24 @@ terraform plan --var-file ../envs/dev.tfvars
 terraform apply --var-file ../envs/dev.tfvars
 ```
 
-### Go Further
+### Connect to the Cluster
+
+> `kubectl` is required to connect to the cluster. You can install it by following the [official documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
+
+Once your infrastructure is deployed, you can connect to the EKS cluster:
+```shell
+aws eks update-kubeconfig --name <CLUSTER_NAME> --region <AWS_REGION>
+kubectl get pods 
+```
+
+Pods including Chainlink should be visible in the kubectl output. Copy the name of the Chainlink pod, and then use the following command to be able to access Chainlink UI on your machine:
+```shell
+kubectl port-forward <CHAINLINK_POD_NAME> 6688:6688
+```
+
+Open your browser and go to `http://localhost:6688/` to access the Chainlink UI and fill your user credentials.
+
+## Go Further
 If you want to go further and customize your Chainlink node and adapters you can look at our [Chainlink Helm Charts documentation](./chainlink-helm/helm.md).
 
 ## Known Issues
