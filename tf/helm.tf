@@ -28,7 +28,7 @@ resource "helm_release" "chainlink" {
   }
 
   set {
-    name = "config.eth_url"
+    name  = "config.eth_url"
     value = var.eth_url
   }
 
@@ -106,17 +106,17 @@ resource "helm_release" "adapters" {
 
   # We are using SOPS to retrieve Adapter API Keys and put it as a value for the Chart
   set {
-    name = "nomics.enabled"
+    name  = "nomics.enabled"
     value = false
   }
 
   set {
-    name = "tiingo.enabled"
+    name  = "tiingo.enabled"
     value = true
   }
 
   set {
-    name = "cryptocompare.enabled"
+    name  = "cryptocompare.enabled"
     value = true
   }
 

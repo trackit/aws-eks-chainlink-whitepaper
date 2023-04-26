@@ -1,11 +1,3 @@
-locals {
-  tags = {
-    Name = "chainlink-article"
-    Owner = "jean-gael"
-    Project = "chainlink"
-  }
-}
-
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> v3.10.0"
