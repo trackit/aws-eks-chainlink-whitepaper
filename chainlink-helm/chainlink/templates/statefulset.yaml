@@ -24,6 +24,8 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
           ports:
             - name: http
               containerPort: 6688
@@ -94,9 +96,10 @@ spec:
                 - test $(chainlink node db status 2>&1 | grep ERROR | wc -c) -eq 0
             initialDelaySeconds: 5
           readinessProbe:
+            initialDelaySeconds: 5
             httpGet:
               path: /health
-              port: http
+              port: 6688
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

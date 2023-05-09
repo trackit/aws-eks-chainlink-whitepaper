@@ -24,6 +24,9 @@ spec:
         - name: {{ .Values.coingecko.name }}
           image: "{{ .Values.coingecko.image.repository }}:{{ .Values.coingecko.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.coingecko.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
           ports:
             - name: http
               containerPort: {{ .Values.coingecko.service.port }}

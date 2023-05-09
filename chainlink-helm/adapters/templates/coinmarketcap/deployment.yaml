@@ -24,6 +24,9 @@ spec:
         - name: {{ .Values.coinmarketcap.name }}
           image: "{{ .Values.coinmarketcap.image.repository }}:{{ .Values.coinmarketcap.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.coinmarketcap.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
           ports:
             - name: http
               containerPort: {{ .Values.coinmarketcap.service.port }}

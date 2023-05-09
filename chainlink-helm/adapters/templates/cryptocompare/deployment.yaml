@@ -24,6 +24,9 @@ spec:
         - name: {{ .Values.cryptocompare.name }}
           image: "{{ .Values.cryptocompare.image.repository }}:{{ .Values.cryptocompare.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.cryptocompare.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
           ports:
             - name: http
               containerPort: {{ .Values.cryptocompare.service.port }}

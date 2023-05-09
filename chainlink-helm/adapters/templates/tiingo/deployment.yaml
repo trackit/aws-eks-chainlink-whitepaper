@@ -24,6 +24,9 @@ spec:
         - name: {{ .Values.tiingo.name }}
           image: "{{ .Values.tiingo.image.repository }}:{{ .Values.tiingo.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.tiingo.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
           ports:
             - name: http
               containerPort: {{ .Values.tiingo.service.port }}

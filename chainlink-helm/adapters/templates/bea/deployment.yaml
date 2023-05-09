@@ -24,6 +24,9 @@ spec:
         - name: {{ .Values.bea.name }}
           image: "{{ .Values.bea.image.repository }}:{{ .Values.bea.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.bea.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
           ports:
             - name: http
               containerPort: {{ .Values.bea.service.port }}

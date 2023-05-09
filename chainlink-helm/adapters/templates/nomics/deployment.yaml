@@ -24,6 +24,9 @@ spec:
         - name: {{ .Values.nomics.name }}
           image: "{{ .Values.nomics.image.repository }}:{{ .Values.nomics.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.nomics.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
           ports:
             - name: http
               containerPort: {{ .Values.nomics.service.port }}

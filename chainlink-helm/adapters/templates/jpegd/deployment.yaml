@@ -24,6 +24,9 @@ spec:
         - name: {{ .Values.jpegd.name }}
           image: "{{ .Values.jpegd.image.repository }}:{{ .Values.jpegd.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.jpegd.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
           ports:
             - name: http
               containerPort: {{ .Values.jpegd.service.port }}
