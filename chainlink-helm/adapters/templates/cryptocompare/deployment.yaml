@@ -26,7 +26,6 @@ spec:
           imagePullPolicy: {{ .Values.cryptocompare.image.pullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false
-            runAsNonRoot: true
           ports:
             - name: http
               containerPort: {{ .Values.cryptocompare.service.port }}

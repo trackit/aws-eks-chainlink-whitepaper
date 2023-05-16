@@ -26,7 +26,6 @@ spec:
           imagePullPolicy: {{ .Values.coingecko.image.pullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false
-            runAsNonRoot: true
           ports:
             - name: http
               containerPort: {{ .Values.coingecko.service.port }}

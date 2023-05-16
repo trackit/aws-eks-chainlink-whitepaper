@@ -26,7 +26,6 @@ spec:
           imagePullPolicy: {{ .Values.bea.image.pullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false
-            runAsNonRoot: true
           ports:
             - name: http
               containerPort: {{ .Values.bea.service.port }}

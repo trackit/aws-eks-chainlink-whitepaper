@@ -15,7 +15,7 @@ config:
     explorer_secret: ""
     explorer_url: ""
     db_url: ""
-    root: "/chainlink"
+    root: "~/.chainlink"
     log_level: "debug"
     eth_chain_id: "4"
     chainlink_tls_port: "0"
