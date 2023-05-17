@@ -12,6 +12,19 @@ Note that these steps are not intended for a production environment, but they wi
 - [Terraform](https://www.terraform.io/downloads.html) ~> 1.3.9 (you can use [tfenv](https://github.com/tfutils/tfenv) to manager your Terraform versions)
 - An ETH URL from an ETH Client (i.e.: [Infura](https://infura.io/))
 - [SOPS](https://github.com/mozilla/sops)
+- [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+
+#### Terraform Backend
+You need to have a Terraform backend configured to store the Terraform state.
+You can use the S3 backend with DynamoDB for state locking:
+1. Create your S3 bucket (replace `bucket_name` with your bucket name and `aws_region` with your AWS region):
+```shell
+aws s3api create-bucket --bucket {{bucket_name}} --region {{aws_region}} --create-bucket-configuration LocationConstraint={{aws_region}}
+```
+2. Create your DynamoDB table with the following command (replace `{{table_name}}` with your table name and `{{region}}` with your AWS region):
+```shell
+aws dynamodb create-table --table-name {{table_name}} --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --billing-mode PAY_PER_REQUEST --region {{region}}
+```
 
 ## Usage
 ### Setup
